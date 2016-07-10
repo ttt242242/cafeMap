@@ -1,9 +1,24 @@
 Rails.application.routes.draw do
+  resources :memos
+
+  get 'map/index'
+
   get 'pages/index'
 
    devise_for :users, controllers: { :omniauth_callbacks => "omniauth_callbacks" }
-  root 'pages#index'
+  # root 'pages#index'
   get 'pages/show'
+
+  get 'map/index'
+  root 'map#index'
+  # get "home/index"
+  get "map/index"
+  #get "map/post_memo"
+  post "map/index" => "map#post_memo"
+  # get "map/index" => "map#post_memo"
+  
+
+
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
 

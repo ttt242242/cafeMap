@@ -1,0 +1,34 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Title:</strong>
+  <%= @memo.title %>
+</p>
+
+<p>
+  <strong>Description:</strong>
+  <%= @memo.description %>
+</p>
+
+<p>
+  <strong>Address:</strong>
+  <%= @memo.address %>
+</p>
+
+<p>
+  <strong>Latitude:</strong>
+  <%= @memo.latitude %>
+</p>
+
+<p>
+  <strong>Longitude:</strong>
+  <%= @memo.longitude %>
+</p>
+
+<p>
+  <strong>User:</strong>
+  <%= @memo.user_id %>
+</p>
+
+<%= link_to 'Edit', edit_memo_path(@memo) %> |
+<%= link_to 'Back', memos_path %>

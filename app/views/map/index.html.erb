@@ -1,0 +1,115 @@
+<!-- <div style='width: 800px;'> -->
+<h2>map</h2>
+<div id="map" style='width: 600px; height: 400px;'></div>
+  <!-- <div id="map" style='width: 600px; height: 400px;'></div> -->
+  <!-- <div id="map" style='width: 300px; height: 200px;'></div> -->
+<!-- </div> -->
+<%# <%= puts params %> 
+<%# <%= "srere#{Time.now}" %> 
+
+<!-- データの表示部 -->
+<!-- <div class="form&#45;actions"> -->
+<!--     <!&#45;&#45; PC用のメニュー部分 &#45;&#45;> -->
+<!--     <!&#45;&#45; <input type= "tel" name="title"><br> &#45;&#45;> -->
+<!--     <input id="content" type= "tel" name="context", value="ddd"> -->
+<!-- </div> -->
+
+
+<script type="text/javascript">
+var title_hash = {} ;
+handler = Gmaps.build('Google');
+handler.buildMap({ provider: {}, internal: {id: 'map'}}, function(){
+    markers = null ;
+    markers = handler.addMarkers(<%=raw @hash.to_json %>);
+    handler.bounds.extendWith(markers);
+    handler.fitMapToBounds();
+    //マップのタッチ判定 以下はタッチしたら入る
+    google.maps.event.addListener(handler.getMap(),  'click', function(e){
+        markers = handler.addMarkers([    // put marker method
+                {
+                    "lat": e.latLng.lat() ,     // coordinates from parameter company
+                    "lng":e.latLng.lng(), 
+                    "infowindow": '<form id="demo-sec" action="/map/index" data-remote="true" method="post"><div><textarea name="memo" style="height:5em" wrap="hard" ></textarea></div><div><input type="hidden" name="id" value= "new" ><div><input type="hidden" name="lat" value= '+e.latLng.lat()+' ></div><div><input type="hidden" name="lng" value= '+e.latLng.lng()+' ></div> <input type="submit" name="add" value="save" onClick="location.reload(false);" > </form>'
+
+                }
+        ]) ;
+
+        handler.bounds.extendWith(markers);
+        }) ;
+
+        // 以下で各markerにイベントリスナーをつける
+        for (var i=0 ;i < markers.length ; i++) {
+            var marker = markers[i]  ;
+            console.log(marker) ;
+        }
+
+});
+
+function CenterControl(controlDiv, map){
+
+var now_pos ;
+navigator.geolocation.getCurrentPosition(function(position){
+        now_pos = new google.maps.LatLng(position.coords.latitude,  position.coords.longitude) ;
+}) ;
+
+// Set CSS for the control border.
+var controlUI = document.createElement('div') ;
+// controlUI.style.backgroundColor = '#fff' ;
+controlUI.style.backgroundColor = '#000' ;
+controlUI.style.border = '2px solid #000' ;
+controlUI.style.borderRadius = '3px' ;
+controlUI.style.boxShadow = '0 2px 6px rgba(0, 0, 0, .3)' ;
+controlUI.style.cursor = 'pointer' ;
+controlUI.style.marginBottom = '22px' ;
+controlUI.style.textAlign = 'center' ;
+controlUI.title = 'Click to recenter the map' ;
+controlDiv.appendChild(controlUI) ;
+
+// Set CSS for the control interior.
+var controlText = document.createElement('div') ;
+// controlText.style.color = 'rgb(25, 25, 25)' ;
+controlText.style.color = 'rgb(256, 256, 256)' ;
+controlText.style.fontFamily = 'Roboto, Arial, sans-serif' ;
+controlText.style.fontSize = '16px' ;
+controlText.style.lineHeight = '38px' ;
+controlText.style.paddingLeft = '5px' ;
+controlText.style.paddingRight = '5px' ;
+controlText.innerHTML = '現在地' ;
+controlUI.appendChild(controlText) ;
+// Setup the click event listeners: simply set the map to Chicago.
+
+
+
+controlUI.addEventListener('click',  function() {
+        map.setCenter(now_pos) ;
+        map.setZoom(14)  //ズームレベル
+        }) ;
+}
+
+var map = handler.getMap() ;
+var centerControlDiv = document.createElement('div') ;
+var centerControl = new CenterControl(centerControlDiv,  map) ;
+map.controls[google.maps.ControlPosition.TOP_CENTER].push(centerControlDiv) ;
+
+
+
+function onClick_delete_memo(){
+
+}
+
+</script>
+
+                            <% content_for :sidebar do %>
+                            <h2>Profile</h2>
+                                <%= @user%>
+                            <% end %>
+
+
+<% content_for :right_side do %>
+                            <h4>周辺のカフェ</h4>
+                                <% @hash.each do |h| %>
+                                    <%= h[:marker_title] %>
+                                    <br>
+                                <% end %>
+                            <% end %>
+
