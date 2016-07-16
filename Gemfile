@@ -22,7 +22,7 @@ gem "pry"
 gem "gmaps4rails"
 gem "geocoder"
 gem 'therubyracer', platforms: :ruby
-gem 'bootstrap-sass', '2.3.2.0'
+gem 'bootstrap-sass', '3.2.0.0'
 # gem 'sprockets', '2.12.4'
 gem 'sprockets', '2.8'
 
